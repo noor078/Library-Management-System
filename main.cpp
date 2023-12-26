@@ -10,28 +10,48 @@ Updated:
 #include <string>
 #include <iostream>
 using namespace std;
+#include <cctype>
+
 
 int main() 
 {
   string userChoice = "abc";
+  string setEmail();
   
     cout << "Welcome to the library management system" << endl;
-    cout << "What would you like to do?" << endl;
-    cout << "Add Member | Issue Book | Return book | Display member's borrowed books" << endl;
+    cout << "What would you like to do?\nType your answer in lowercase and put a dash between words" << endl;
+    cout << "Add Member | Issue Book | Return book | Display borrowed books" << endl;
     cin >> userChoice;
     cout << "You have selected " << userChoice << endl;
-
+    if (userChoice == "add-member") {
+      
+}
+ if (userChoice == "issue-book") {
+   
+}
+ if (userChoice == "display-borrowed-books") {
+   
+}
+ if (userChoice == "return-book") {
+   
+}
     return 0;
 }
 
 class Person
 {
 private:
-std::string name;
-std::string address;
-std::string email;
-public:
+string name;
+string address;
+string email;
+};
 
+class Librarian
+{
+  private:
+  int staffId;
+  int salary;
+  
 };
 
 class Member
@@ -40,24 +60,38 @@ class Member
     int memberId;
 };
 
+class Book
+{
+  private:
+  int bookID;
+  string bookName;
+  string authorFirstName;
+  string authorLastName;
+  string bookType;
+  int dueDate;
+};
 
-std::string setEmail() {
-    std::string email;
-cout << "What would you like to set your email as?";
-cout << "Type new email:";
+string setEmail() {
+    string email;
+    string userChoice;
+    
+cout << "What would you like to set your email as?" << endl;
+cout << "Type new email:" << endl;
 cin >> email;
-cout << "The email you have set is: " << email;
+cout << "The email you have set is " << email << endl;
+cout << "Correct? Yes/No" << endl;
+cin >> userChoice;
+if (userChoice == "no"){
+  cout << "Type new email:" << endl;
+cin >> email;
+cout << "The email you have set is " << email << endl;
+cout << "Correct? Yes/No" << endl;
+cin >> userChoice;
+}
 return email;
 }
-
-class Librarian
-{
-private:
-
-};
 
 void addMember() {
 cout << "What's members name?";
 
 }
-
