@@ -2,7 +2,6 @@
 main.cpp
 Author: student id
 Created: 23/12/23
-Updated:
 */
 
 #include <iostream>
@@ -11,15 +10,76 @@ Updated:
 #include <iostream>
 using namespace std;
 #include <cctype>
+#include <map>
+
+class Person {
+  public:
+    string email;
+  string address;
+  string name;
+  string userChoice;
+  string getName();
+  string setName();
+  string getAddress();
+  string setAddress();
+  string getEmail() const{ 
+    return name;
+  };
+  string setEmail();
+
+void se
+
+};
+
+class Member {
+  public:
+  int memberId;
+};
+
+class Librarian {
+  public:
+int staffId;
+int salary;
+};
+
+class Book {
+  public:
+int bookID;
+string bookName;
+string authorFirstName;
+string authorLastName;
+string bookType;
+string dueDate;
+string borrower;
+void setBorrower(Member* borrower) {
+  this->borrower = borrower;
+}
+private:
+Member* borrower;
+};
 
 int main()
 {
-  string userChoice;
+  Book book;
+  Member member;
   string setEmail();
-  int memberId;
-  string email;
-  string address;
-  string name;
+  string getName();
+  string bookName;
+string userChoice;
+
+struct Book
+{
+  int bookID;
+  string bookName;
+  string authorFirstName;
+  string authorLastName;
+};
+
+  std::map<int, Book> bookMap;
+  bookMap[1] = {1, "The Great Gatsby", "F.Scott", "Fitzgerald"};
+  bookMap[2] = {2, "To Kill a Mockingbird", "Harper", "Lee"};
+  bookMap[3] = {3, "The Catcher in the Rye", "J.D.", "Salinger"};
+  bookMap[4] = {4, "Pride and Prejudice", "Jane", "Austen"};
 
   cout << "Welcome to the library management system" << endl;
   cout << "What would you like to do?\nType your answer in lowercase and put a dash between words" << endl;
@@ -39,10 +99,10 @@ int main()
     {
       cout << "Member ID must be between 3 and 7 characters." << endl;
     }
-    cout << "Type member's name:" << endl;
-    cin >> name;
-    cout << "Type member's email:" << endl;
-    cin >> email;
+    //cout << "Type member's name:" << endl;
+    //cin >> name;
+    //cout << "Type member's email:" << endl;
+    // cin >> email;
     if (email.find('@') != std::string::npos)
     {
       cout << "Member email is valid" << endl;
@@ -54,13 +114,15 @@ int main()
     }
     cout << "Type member's address:" << endl;
     cin >> address;
-    if (address.length() >= 5 && address.length() <= 50) {
-cout << "Address is valid." << endl;
-    } else {
+    if (address.length() >= 5 && address.length() <= 50)
+    {
+      cout << "Address is valid." << endl;
+    }
+    else
+    {
       cout << "ERROR: Address must be between 5 and 50 characters." << endl;
       cin >> address;
     }
-
   }
 
   if (userChoice == "issue-book")
@@ -75,37 +137,25 @@ cout << "Address is valid." << endl;
   return 0;
 }
 
-class Person
-{
-private:
-  string name;
-  string address;
-  string email;
+string getName() {
+ cout << "Type member's name:" << endl;
+    cin >> name;
 };
+string setName() {
+  
+}
+string getAddress() {
 
-class Librarian
-{
-private:
-  int staffId;
-  int salary;
-};
+}
+string setAddress() {
 
-class Member
-{
-private:
-  int memberId;
-};
+}
+string getEmail() {
 
-class Book
-{
-private:
-  int bookID;
-  string bookName;
-  string authorFirstName;
-  string authorLastName;
-  string bookType;
-  int dueDate;
-};
+}
+string setEmail() {
+
+}
 
 string setEmail()
 {
@@ -133,3 +183,27 @@ void addMember()
 {
   cout << "What's members name?";
 }
+
+string getbookName() {
+    int userInputID;
+    
+    cout << "Enter book ID: " << endl;
+    cin >> userInputID;
+
+    Book book;
+    book.bookID = userInputID;
+    string bookName = book.getBookNameFromID(userInputID);
+
+    cout << "Book Name: " << bookName << endl;
+
+ string getBookNameFromID(int id) {
+        auto it = bookMap.find(id);
+
+        if (it != bookMap.end()) {
+            return it->second.bookName;
+        } else {
+            return "Book not found";
+        }
+    }
+};
+ 
