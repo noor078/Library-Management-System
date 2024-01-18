@@ -83,7 +83,7 @@ public:
       address = newAddress;
       cout << "Address is valid." << endl;
     }
-    else
+    else 
     {
       cout << "Invalid address. Address length should be between 5 and 50 characters." << endl;
     }
