@@ -21,12 +21,15 @@ private:
   string email;
   string address;
   string name;
+
 public:
   string userChoice;
+
   string getName() const
   {
     return name;
   }
+
   void setName(const string &newName)
   {
     if (!newName.empty())
@@ -43,6 +46,7 @@ public:
   {
     return email;
   }
+
   void setEmail(const string &newEmail)
   {
     regex emailRegex(R"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})");
@@ -61,6 +65,7 @@ public:
   {
     return address;
   }
+
   void setAddress(const string &newAddress)
   {
     if (newAddress.length() >= 5 && newAddress.length() <= 50)
@@ -86,14 +91,13 @@ class Librarian
 public:
   int staffId;
   int salary;
-void addmember();
-void issueBook(int )
-
+  void addmember();
+  void issueBook(int)
 };
 
 class Book
 {
-public:
+private:
   int bookID;
   string bookName;
   string authorFirstName;
@@ -101,20 +105,51 @@ public:
   string bookType;
   string borrower;
   time_t dueDate;
+  Person *borrower;
+
+public:
+  Book(int id, const string &name, const string &firstName, const string &lastName) : bookID(id), bookName(name), authorFirstName(firstName), authorLastName(lastName), borrower(nullptr) {}
+
+  int getbookID() const { return bookID; }
+
+  string getbookName() const
+  {
+    return bookName;
+  }
+
+  string getAuthorfirstName() const
+  {
+    return authorFirstName;
+  }
+
+  string getAuthorLastName() const
+  {
+    return authorLastName;
+  }
+
+  time_t getDueDate() const
+  {
+    return dueDate;
+  }
+
+  void setDueDate(const time_t &newDueDate)
+  {
+    dueDate = newDueDate;
+  }
+  void returnBook();
+  void borrowBook(Person &borrower, const time_t &dueDate);
 
   void setBorrower(Member *borrower)
   {
     this->borrower = borrower;
   }
-  Book(int bookID, const string& bookName, const string& authorFirstName, const string& authorLastName)
-        : bookID(bookID), bookName(bookName), authorFirstName(authorFirstName), authorLastName(authorLastName) {
-        dueDate = 0;
-    }
-    void borrowBook(Member& borrower, time_t dueDate);
-    void returnBook();
-
-private:
-  Member *borrower;
+  Book(int bookID, const string &bookName, const string &authorFirstName, const string &authorLastName)
+      : bookID(bookID), bookName(bookName), authorFirstName(authorFirstName), authorLastName(authorLastName)
+  {
+    dueDate = 0;
+  }
+  void borrowBook(Member &borrower, time_t dueDate);
+  void returnBook();
 };
 
 int main()
@@ -147,43 +182,41 @@ int main()
 
   if (userChoice == "add-member")
   {
-  string newName;
-  cout << "Enter name: ";
-  getline(cin, newName);
-  person.setName(newName);
+    string newName;
+    cout << "Enter member's name: ";
+    getline(cin, newName);
+    person.setName(newName);
 
-  string newEmail;
-  cout << "Enter email: ";
-  getline(cin, newEmail);
-  person.setEmail(newEmail);
+    string newEmail;
+    cout << "Enter member's email: ";
+    getline(cin, newEmail);
+    person.setEmail(newEmail);
 
-  string newAddress;
-  cout << "Enter address: ";
-  getline(cin, newAddress);
-  person.setAddress(newAddress);
+    string newAddress;
+    cout << "Enter member's address: ";
+    getline(cin, newAddress);
+    person.setAddress(newAddress);
 
-   cout << "Member Information:" << endl;
-  cout << "Name: " << person.getName() << "\n";
-  cout << "Email: " << person.getEmail() << "\n";
-  cout << "Address: " << person.getAddress() << "\n";
+    cout << "Member Information:" << endl;
+    cout << "Name: " << person.getName() << "\n";
+    cout << "Email: " << person.getEmail() << "\n";
+    cout << "Address: " << person.getAddress() << "\n";
 
-  return 0;
+    return 0;
   }
   if (userChoice == "issue-book")
   {
-//setBooksBorrowed(book : Book)
-//string getMemberID()
-//
+    // setBooksBorrowed(book : Book)
+    // string getMemberID()
+    //
   }
   if (userChoice == "display-borrowed-books")
 
   {
-//getBooksBorrowed
-
+    // getBooksBorrowed
   }
   if (userChoice == "return-book")
   {
-
   }
   return 0;
 }
