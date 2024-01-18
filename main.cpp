@@ -12,15 +12,17 @@ using namespace std;
 #include <cctype>
 #include <map>
 #include <regex>
+#include <iomanip>
+#include <ctime>
 
 class Person
 {
-public:
+private:
   string email;
   string address;
   string name;
+public:
   string userChoice;
-
   string getName() const
   {
     return name;
@@ -36,6 +38,7 @@ public:
       cout << "Name is not valid, return a name with characters" << endl;
     }
   }
+
   string getEmail() const
   {
     return email;
@@ -83,6 +86,9 @@ class Librarian
 public:
   int staffId;
   int salary;
+void addmember();
+void issueBook(int )
+
 };
 
 class Book
@@ -93,12 +99,19 @@ public:
   string authorFirstName;
   string authorLastName;
   string bookType;
-  string dueDate;
   string borrower;
+  time_t dueDate;
+
   void setBorrower(Member *borrower)
   {
     this->borrower = borrower;
   }
+  Book(int bookID, const string& bookName, const string& authorFirstName, const string& authorLastName)
+        : bookID(bookID), bookName(bookName), authorFirstName(authorFirstName), authorLastName(authorLastName) {
+        dueDate = 0;
+    }
+    void borrowBook(Member& borrower, time_t dueDate);
+    void returnBook();
 
 private:
   Member *borrower;
@@ -108,8 +121,7 @@ int main()
 {
   Book book;
   Member member;
-  string setEmail();
-  string getName();
+  Person person;
   string bookName;
   string userChoice;
 
@@ -121,7 +133,7 @@ int main()
     string authorLastName;
   };
 
-  std::map<int, Book> bookMap;
+  map<int, Book> bookMap;
   bookMap[1] = {1, "The Great Gatsby", "F.Scott", "Fitzgerald"};
   bookMap[2] = {2, "To Kill a Mockingbird", "Harper", "Lee"};
   bookMap[3] = {3, "The Catcher in the Rye", "J.D.", "Salinger"};
@@ -135,90 +147,45 @@ int main()
 
   if (userChoice == "add-member")
   {
-    cout << "Type member's ID (between 3 and 7 characters):" << endl;
-    cin >> memberId;
-    if (memberId >= 100 && memberId <= 9999999)
-    {
-      cout << "Member ID is valid." << endl;
-    }
-    else
-    {
-      cout << "Member ID must be between 3 and 7 characters." << endl;
-    }
-    // cout << "Type member's name:" << endl;
-    // cin >> name;
-    // cout << "Type member's email:" << endl;
-    //  cin >> email;
-    if (email.find('@') != std::string::npos)
-    {
-      cout << "Member email is valid" << endl;
-    }
-    else
-    {
-      cout << "ERROR: Please type a valid email, containing an @" << endl;
-      cin >> email;
-    }
-    /**
-    cout << "Type member's address:" << endl;
-    cin >> address;
-    if (address.length() >= 5 && address.length() <= 50)
-    {
-      cout << "Address is valid." << endl;
-    }
-    else
-    {
-      cout << "ERROR: Address must be between 5 and 50 characters." << endl;
-      cin >> address;
-    }
-  }
-*/
-    if (userChoice == "issue-book")
-    {
-    }
-    if (userChoice == "display-borrowed-books")
-    {
-    }
-    if (userChoice == "return-book")
-    {
-    }
-    return 0;
-  }
-}
-string getAddress()
-{
-}
-string setAddress()
-{
-}
-string getEmail()
-{
-}
+  string newName;
+  cout << "Enter name: ";
+  getline(cin, newName);
+  person.setName(newName);
 
-string setEmail()
-{
-  string email;
-  string userChoice;
+  string newEmail;
+  cout << "Enter email: ";
+  getline(cin, newEmail);
+  person.setEmail(newEmail);
 
-  cout << "What would you like to set your email as?" << endl;
-  cout << "Type new email:" << endl;
-  cin >> email;
-  cout << "The email you have set is " << email << endl;
-  cout << "Correct? Yes/No" << endl;
-  cin >> userChoice;
-  if (userChoice == "no")
+  string newAddress;
+  cout << "Enter address: ";
+  getline(cin, newAddress);
+  person.setAddress(newAddress);
+
+   cout << "Member Information:" << endl;
+  cout << "Name: " << person.getName() << "\n";
+  cout << "Email: " << person.getEmail() << "\n";
+  cout << "Address: " << person.getAddress() << "\n";
+
+  return 0;
+  }
+  if (userChoice == "issue-book")
   {
-    cout << "Type new email:" << endl;
-    cin >> email;
-    cout << "The email you have set is " << email << endl;
-    cout << "Correct? Yes/No" << endl;
-    cin >> userChoice;
+//setBooksBorrowed(book : Book)
+//string getMemberID()
+//
   }
-  return email;
-}
+  if (userChoice == "display-borrowed-books")
 
-void addMember()
-{
-  cout << "What's members name?";
+  {
+//getBooksBorrowed
+
+  }
+  if (userChoice == "return-book")
+  {
+
+  }
+  return 0;
 }
 
 string getbookName()
