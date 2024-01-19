@@ -130,7 +130,7 @@ private:
 public:
   void addmember();
 
-  void displayBorrowedBooks(const Member &member)
+ void displayBorrowedBooks(const Member &member)
   {
     const std::vector<Book *> &borrowedBooks = member.getBooksBorrowed();
 
@@ -145,12 +145,11 @@ public:
                   << "Due Date: " << std::put_time(std::localtime(&book->getDueDate()), "%Y-%m-%d %H:%M:%S") << std::endl;
       }
     }
-    else
+   else
     {
       std::cout << "No books borrowed by Member ID " << member.getMemberID() << ".\n";
     }
   }
-
 };
 
 class Book
