@@ -9,6 +9,9 @@ using namespace std;
 #include <iomanip>
 #include <ctime>
 
+// Forward declaration of book class
+class Book;
+
 class Date
 {
 public:
@@ -83,7 +86,7 @@ public:
       address = newAddress;
       cout << "Address is valid." << endl;
     }
-    else 
+    else
     {
       cout << "Invalid address. Address length should be between 5 and 50 characters." << endl;
     }
@@ -93,13 +96,14 @@ public:
 class Member
 {
 private:
-  // std::vector<Book *> booksBorrowed;
   int memberID;
 
 public:
-  Member(int id, const std::string &memberName, const std::string &memberAddress, const std::string &memberEmail) : memberID(id) {}
+  vector<Book *> booksBorrowed;
 
   Member() : memberID(0) {}
+
+  Member(int id, const std::string &memberName, const std::string &memberAddress, const std::string &memberEmail) : memberID(id) {}
 
   int getMemberID() const
   {
@@ -122,23 +126,6 @@ private:
 
 public:
   void addmember();
-
-  void calcFine(const Member &member)
-  {
-    int totalFine = 0;
-
-    for (const auto &book : member.getBooksBorrowed())
-    {
-      time_t currentDate;
-      time_t dueDate = book->getDueDate();
-
-      if (currentDate > dueDate)
-      {
-      }
-    }
-
-    std::cout << "Total fine for Member " << member.getMemberID() << ": £" << totalFine << "\n";
-  }
 };
 
 class Book
@@ -158,6 +145,10 @@ public:
   string bookType;
   int pageCount;
 
+  bool operator==(const Book &other) const
+  {
+    return this->bookID == other.bookID;
+  }
   // Default constructor for my Book Class
   Book() : bookID(0), pageCount(0), bookName(""), authorFirstName(""), authorLastName(""), bookType("") {}
 
@@ -217,6 +208,49 @@ public:
   }
 };
 
+// Function for reading data source file
+vector<Book> readCSV(const string &filename)
+{
+  vector<Book> books;
+
+  ifstream file(filename);
+  if (!file.is_open())
+  {
+    cerr << "Error opening data source file" << endl;
+    return books;
+  }
+
+  string line;
+  getline(file, line);
+
+  while (getline(file, line))
+  {
+    istringstream iss(line);
+    string token;
+
+    int id;
+    string name, authorFirstName, authorLastName, bookType;
+    int pageCount;
+
+    if (getline(iss, token, '\t'))
+      id = stoi(token);
+    if (getline(iss, name, '\t') &&
+        getline(iss, token, '\t'))
+      pageCount = stoi(token);
+    if (getline(iss, authorFirstName, '\t') &&
+        getline(iss, authorLastName, '\t') &&
+        getline(iss, bookType, '\t'))
+    {
+      books.emplace_back(id, name, authorFirstName, authorLastName);
+      books.back().pageCount = pageCount;
+      books.back().bookType = bookType;
+    }
+  }
+
+  file.close();
+  return books;
+}
+
 vector<Book> readCSV(const string &filename);
 
 int main()
@@ -237,12 +271,15 @@ int main()
          << "Book Type: " << book.bookType << std::endl;
   }
 
+  // Main menu of Library Management System, enabling user choices
   cout << "Welcome to the library management system" << endl;
   cout << "What would you like to do?\nType your answer in lowercase and put a dash between words" << endl;
   cout << "Add Member | Issue Book | Return book | Display borrowed books" << endl;
   cin >> userChoice;
   cout << "You have selected " << userChoice << endl;
 
+  // Adding a member functionality
+  // Allows the user to enter member's name, email and address following correct validations
   if (userChoice == "add-member")
   {
     string newName;
@@ -264,6 +301,8 @@ int main()
     cout << "Name: " << person.getName() << "\n";
     cout << "Email: " << person.getEmail() << "\n";
     cout << "Address: " << person.getAddress() << "\n";
+    cout << "Type -1 to return to restart Library Management System" << endl;
+    cin >> userChoice;
 
     return 0;
   }
