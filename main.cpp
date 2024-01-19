@@ -110,12 +110,15 @@ public:
     return memberID;
   }
 
+void setBooksBorrowed(Book &book)
+  {
+    booksBorrowed.push_back(&book);
+  }
+
   const std::vector<Book *> &getBooksBorrowed() const
   {
     return booksBorrowed;
   }
-
-  void setBooksBorrowed(Book &book);
 };
 
 class Librarian
@@ -126,6 +129,28 @@ private:
 
 public:
   void addmember();
+
+  void displayBorrowedBooks(const Member &member)
+  {
+    const std::vector<Book *> &borrowedBooks = member.getBooksBorrowed();
+
+    if (!borrowedBooks.empty())
+    {
+      std::cout << "Books borrowed by Member ID " << member.getMemberID() << ":\n";
+      for (const auto &book : borrowedBooks)
+      {
+        std::cout << "Book ID: " << book->getbookID() << ", "
+                  << "Book Name: " << book->getbookName() << ", "
+                  << "Author: " << book->getAuthorfirstName() << " " << book->getAuthorLastName() << ", "
+                  << "Due Date: " << std::put_time(std::localtime(&book->getDueDate()), "%Y-%m-%d %H:%M:%S") << std::endl;
+      }
+    }
+    else
+    {
+      std::cout << "No books borrowed by Member ID " << member.getMemberID() << ".\n";
+    }
+  }
+
 };
 
 class Book
@@ -196,7 +221,7 @@ public:
       time_t currentDate;
       time_t dueDate = currentDate + 3;
 
-      // book.issueBook(member, dueDate);
+      //book.issueBook(member, dueDate);
       member.setBooksBorrowed(book);
 
       std::cout << "Book has been issued successfully.\n";
@@ -262,6 +287,8 @@ int main()
   Person person;
   string bookName;
   string userChoice;
+  Librarian librarian;
+  string filename;
 
   for (const auto &book : libraryBooks)
   {
@@ -271,8 +298,14 @@ int main()
          << "Book Type: " << book.bookType << std::endl;
   }
 
-  // Main menu of Library Management System, enabling user choices
+  // Main menu of Library Management System
+  // Enabling user choices, prompts of what action they would like to complete
   cout << "Welcome to the library management system" << endl;
+
+  // Enables user to independantly input CSV data file name to be used in accessing books
+  cout << "Enter the data file name to access all the necessary library books" << endl;
+  cin >> filename;
+
   cout << "What would you like to do?\nType your answer in lowercase and put a dash between words" << endl;
   cout << "Add Member | Issue Book | Return book | Display borrowed books" << endl;
   cin >> userChoice;
@@ -311,6 +344,7 @@ int main()
   }
   if (userChoice == "display-borrowed-books")
   {
+    librarian.displayBorrowedBooks(member);
   }
   if (userChoice == "return-book")
   {
