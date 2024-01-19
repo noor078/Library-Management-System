@@ -110,6 +110,11 @@ public:
     return memberID;
   }
 
+  void setMemberID(int &newMemberID)
+  {
+      memberID = newMemberID;
+  }
+
 void setBooksBorrowed(Book &book)
   {
     booksBorrowed.push_back(&book);
@@ -130,9 +135,9 @@ private:
   time_t dueDate;
   Person *borrower;
   bool borrowed;
-  vector<Book> availableBooks;
 
 public:
+  vector<Book> availableBooks;
   int bookID;
   string bookType;
   int pageCount;
@@ -184,7 +189,6 @@ public:
   void issueBook(Member &member, const time_t &dueDate)
   {
     setDueDate(dueDate);
-    
   }
 
 };
@@ -196,29 +200,32 @@ private:
   int salary;
 
 public:
+void issueBookToMember(Member & member, Book & book, const time_t & dueDate);
+
   void addmember();
 
  void displayBorrowedBooks(const Member &member)
-  {
+{
     const std::vector<Book *> &borrowedBooks = member.getBooksBorrowed();
 
     if (!borrowedBooks.empty())
     {
-      std::cout << "The books borrowed by member " << member.getMemberID() << ":\n";
-      for (const auto &book : borrowedBooks)
-      {
-        std::cout << "Book ID: " << book->getbookID() << ", "
-                  << "Book Name: " << book->getbookName() << ", "
-                  << "Author: " << book->getAuthorfirstName() << " " << book->getAuthorLastName() << ", "
-                  << "Due Date: " << std::put_time(std::localtime(&book->getDueDate()), "%Y-%m-%d %H:%M:%S") << std::endl;
-      }
+        std::cout << "The books borrowed by member " << member.getMemberID() << ":\n";
+        for (const auto &book : borrowedBooks)
+        {
+            time_t dueDate = book->getDueDate();
+            std::cout << "Book ID: " << book->getbookID() << ", "
+                      << "Book Name: " << book->getbookName() << ", "
+                      << "Author: " << book->getAuthorfirstName() << " " << book->getAuthorLastName() << ", "
+                      << "Due Date: " << std::put_time(std::localtime(&dueDate), "%Y-%m-%d %H:%M:%S") << std::endl;
+        }
     }
-   else
+    else
     {
-      std::cout << "No books borrowed by Member ID " << member.getMemberID() << ".\n";
+        std::cout << "No books borrowed by Member ID " << member.getMemberID() << ".\n";
     }
-  }
-
+}
+};
  void Librarian::issueBookToMember(Member &member, Book &book, const time_t &dueDate)
 {
   if (std::find(book.availableBooks.begin(), book.availableBooks.end(), book) != book.availableBooks.end())
@@ -233,7 +240,6 @@ public:
       std::cout << "Book not available for issue.\n";
     }
   }
-};
 
 // Function for reading data source file
 vector<Book> readCSV(const string &filename)
@@ -346,6 +352,11 @@ int main()
   }
   if (userChoice == "display-borrowed-books")
   {
+    cout << "Enter member's ID: " << endl;
+    int memberID;
+    cin >> memberID;
+    member.setMemberID(memberID);
+
     librarian.displayBorrowedBooks(member);
   }
   if (userChoice == "return-book")
