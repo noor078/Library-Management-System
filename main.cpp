@@ -342,6 +342,7 @@ int main()
     cout << "Name: " << person.getName() << "\n";
     cout << "Email: " << person.getEmail() << "\n";
     cout << "Address: " << person.getAddress() << "\n";
+    
     cout << "Type -1 to return to restart Library Management System" << endl;
     cin >> userChoice;
 
@@ -349,6 +350,8 @@ int main()
   }
   if (userChoice == "issue-book")
   {
+
+
   }
   if (userChoice == "display-borrowed-books")
   {
