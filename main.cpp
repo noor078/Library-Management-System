@@ -15,7 +15,7 @@ class Book;
 // Date class
 class Date
 {
-    // Constructor for the Date class
+  // Constructor for the Date class
 public:
   Date(int day, int month, int year) : day(day), month(month), year(year) {}
 
@@ -127,11 +127,11 @@ public:
   // Setter for updating the member ID
   void setMemberID(int &newMemberID)
   {
-      memberID = newMemberID;
+    memberID = newMemberID;
   }
 
   // Function adds a borrowed book to the member's list
-void setBooksBorrowed(Book &book)
+  void setBooksBorrowed(Book &book)
   {
     booksBorrowed.push_back(&book);
   }
@@ -219,7 +219,6 @@ public:
   {
     setDueDate(dueDate);
   }
-
 };
 
 // Library class
@@ -228,51 +227,53 @@ class Librarian
 private:
   int staffId;
   int salary;
+  std::vector<Member> members;
 
 public:
   // Function to issue a book to a member with a specified due date
-void issueBookToMember(Member & member, Book & book, const time_t & dueDate);
+  void issueBookToMember(Member &member, Book &book, const time_t &dueDate);
 
   // Function to add a new member
   void addmember();
 
   // Function to display borrowed books of a member
- void displayBorrowedBooks(const Member &member)
-{
+  void displayBorrowedBooks(const Member &member)
+  {
     const std::vector<Book *> &borrowedBooks = member.getBooksBorrowed();
 
     if (!borrowedBooks.empty())
     {
-        std::cout << "The books borrowed by member " << member.getMemberID() << ":\n";
-        for (const auto &book : borrowedBooks)
-        {
-            time_t dueDate = book->getDueDate();
-            std::cout << "Book ID: " << book->getbookID() << ", "
-                      << "Book Name: " << book->getbookName() << ", "
-                      << "Author: " << book->getAuthorfirstName() << " " << book->getAuthorLastName() << ", "
-                      << "Due Date: " << std::put_time(std::localtime(&dueDate), "%Y-%m-%d %H:%M:%S") << std::endl;
-        }
+      std::cout << "The books borrowed by member " << member.getMemberID() << ":\n";
+      for (const auto &book : borrowedBooks)
+      {
+        time_t dueDate = book->getDueDate();
+        std::cout << "Book ID: " << book->getbookID() << ", "
+                  << "Book Name: " << book->getbookName() << ", "
+                  << "Author: " << book->getAuthorfirstName() << " " << book->getAuthorLastName() << ", "
+                  << "Due Date: " << std::put_time(std::localtime(&dueDate), "%Y-%m-%d %H:%M:%S") << std::endl;
+      }
     }
     else
     {
-        std::cout << "No books borrowed by Member ID " << member.getMemberID() << ".\n";
+      std::cout << "No books borrowed by Member ID " << member.getMemberID() << ".\n";
     }
-}
+  }
 };
- void Librarian::issueBookToMember(Member &member, Book &book, const time_t &dueDate)
+
+void Librarian::issueBookToMember(Member &member, Book &book, const time_t &dueDate)
 {
   if (std::find(book.availableBooks.begin(), book.availableBooks.end(), book) != book.availableBooks.end())
   {
-      book.issueBook(member, dueDate);
-      member.setBooksBorrowed(book);
+    book.issueBook(member, dueDate);
+    member.setBooksBorrowed(book);
 
-      std::cout << "Book has been issued successfully.\n";
-    }
-    else
-    {
-      std::cout << "Book not available for issue.\n";
-    }
+    std::cout << "Book has been issued successfully.\n";
   }
+  else
+  {
+    std::cout << "Book not available for issue.\n";
+  }
+}
 
 // Function for reading data source file and returning a vector of books
 vector<Book> readCSV(const string &filename)
@@ -322,8 +323,11 @@ vector<Book> readCSV(const string &filename);
 // Main function of the Library Management System
 int main()
 {
-    // In order to read books from a CSV file
+  // In order to read books from a CSV file, put books into a vector
   vector<Book> libraryBooks = readCSV("library_books.csv");
+  
+  // Storing members into a vector
+  vector<Member> members;
 
   // Creating instances of my classes: Book, Member, Person, and Librarian
   Book book;
@@ -379,13 +383,19 @@ int main()
     cout << "Name: " << person.getName() << "\n";
     cout << "Email: " << person.getEmail() << "\n";
     cout << "Address: " << person.getAddress() << "\n";
-    
-    cout << "Type -1 to return to restart Library Management System" << endl;
-    cin >> userChoice;
 
+// To set member ID
+int memberID;
+    std::cout << "Enter member's ID: ";
+    std::cin >> memberID;
+    member.setMemberID(memberID);
+
+    members.push_back(member);
+    std::cout << "Member added successfully" << std::endl;
     return 0;
   }
-  
+
+  // Faced problems with logic of issuing book and so decided to omit in order to have code successfully run
   if (userChoice == "issue-book")
   {
   }
@@ -400,6 +410,7 @@ int main()
     librarian.displayBorrowedBooks(member);
   }
 
+  // Faced problems with logic of return book and so decided to omit in order to have code run
   if (userChoice == "return-book")
   {
   }
