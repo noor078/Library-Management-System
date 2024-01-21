@@ -12,11 +12,14 @@ using namespace std;
 // Forward declaration of book class
 class Book;
 
+// Date class
 class Date
 {
+    // Constructor for the Date class
 public:
   Date(int day, int month, int year) : day(day), month(month), year(year) {}
 
+  // Overloaded addition operator to calculate a new date by adding days
   Date operator+(int days) const
   {
     return Date(day + days, month, year);
@@ -28,6 +31,7 @@ private:
   int year;
 };
 
+// Person class
 class Person
 {
 private:
@@ -38,14 +42,16 @@ private:
 public:
   string userChoice;
 
+  // Getter for retrieving the name of the person
   string getName() const
   {
     return name;
   }
 
+  // Setter for updating the name with validation
   void setName(const string &newName)
   {
-    if (!newName.empty())
+    if (name.length() >= 3 && name.length() <= 20)
     {
       name = newName;
     }
@@ -55,11 +61,13 @@ public:
     }
   }
 
+  // Getter for retrieving the email of the person
   string getEmail() const
   {
     return email;
   }
 
+  // Setter for updating the email with email format validation
   void setEmail(const string &newEmail)
   {
     regex emailRegex(R"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})");
@@ -74,11 +82,13 @@ public:
     }
   }
 
+  // Getter for retrieving the address of the person
   string getAddress() const
   {
     return address;
   }
 
+  // Setter for updating the address with length validation
   void setAddress(const string &newAddress)
   {
     if (newAddress.length() >= 5 && newAddress.length() <= 50)
@@ -93,6 +103,7 @@ public:
   }
 };
 
+// Member class
 class Member
 {
 private:
@@ -101,31 +112,38 @@ private:
 public:
   vector<Book *> booksBorrowed;
 
+  // Default constructor for Member class
   Member() : memberID(0) {}
 
+  // Constructor for Member class with initialisation
   Member(int id, const std::string &memberName, const std::string &memberAddress, const std::string &memberEmail) : memberID(id) {}
 
+  // Getter method for retrieving the member ID
   int getMemberID() const
   {
     return memberID;
   }
 
+  // Setter for updating the member ID
   void setMemberID(int &newMemberID)
   {
       memberID = newMemberID;
   }
 
+  // Function adds a borrowed book to the member's list
 void setBooksBorrowed(Book &book)
   {
     booksBorrowed.push_back(&book);
   }
 
+  // Getter for retrieving the list of books borrowed by the member
   const std::vector<Book *> &getBooksBorrowed() const
   {
     return booksBorrowed;
   }
 };
 
+// Book class
 class Book
 {
 private:
@@ -142,50 +160,61 @@ public:
   string bookType;
   int pageCount;
 
+  // Overloaded equality operator for Book class
   bool operator==(const Book &other) const
   {
     return this->bookID == other.bookID;
   }
-  // Default constructor for my Book Class
+
+  // Default constructor for Book Class
   Book() : bookID(0), pageCount(0), bookName(""), authorFirstName(""), authorLastName(""), bookType("") {}
 
+  // Constructor for Book class with initialisation
   Book(int id, const string &name, const string &firstName, const string &lastName) : bookID(id), bookName(name), authorFirstName(firstName), authorLastName(lastName), borrower(nullptr) {}
 
-  // Getter methods
+  // Getter for retrieving the book ID
   int getbookID() const
   {
     return bookID;
   }
 
+  // Getter for retrieving the book name
   string getbookName() const
   {
     return bookName;
   }
 
+  // Getter for retrieving the author's first name
   string getAuthorfirstName() const
   {
     return authorFirstName;
   }
 
+  // Getter for retrieving the author's last name
   string getAuthorLastName() const
   {
     return authorLastName;
   }
 
+  // Getter for retrieving the due date of the book
   time_t getDueDate() const
   {
     return dueDate;
   }
 
+  // Setter for updating the due date of the book
   void setDueDate(const time_t &newDueDate)
   {
     dueDate = newDueDate;
   }
 
+  // In order to return a borrowed book
   void returnBook();
 
+  // In order to borrow a book with a specified due date
   void borrowBook(Person &borrower, const time_t &dueDate);
 
+  // Function for issuing a book to a member with a specified due date
   void issueBook(Member &member, const time_t &dueDate)
   {
     setDueDate(dueDate);
@@ -193,6 +222,7 @@ public:
 
 };
 
+// Library class
 class Librarian
 {
 private:
@@ -200,10 +230,13 @@ private:
   int salary;
 
 public:
+  // Function to issue a book to a member with a specified due date
 void issueBookToMember(Member & member, Book & book, const time_t & dueDate);
 
+  // Function to add a new member
   void addmember();
 
+  // Function to display borrowed books of a member
  void displayBorrowedBooks(const Member &member)
 {
     const std::vector<Book *> &borrowedBooks = member.getBooksBorrowed();
@@ -241,7 +274,7 @@ void issueBookToMember(Member & member, Book & book, const time_t & dueDate);
     }
   }
 
-// Function for reading data source file
+// Function for reading data source file and returning a vector of books
 vector<Book> readCSV(const string &filename)
 {
   vector<Book> books;
@@ -286,10 +319,13 @@ vector<Book> readCSV(const string &filename)
 
 vector<Book> readCSV(const string &filename);
 
+// Main function of the Library Management System
 int main()
 {
+    // In order to read books from a CSV file
   vector<Book> libraryBooks = readCSV("library_books.csv");
 
+  // Creating instances of my classes: Book, Member, Person, and Librarian
   Book book;
   Member member;
   Person person;
@@ -298,6 +334,7 @@ int main()
   Librarian librarian;
   string filename;
 
+  // To display information about available library books
   for (const auto &book : libraryBooks)
   {
     cout << "Book ID: " << book.getbookID() << ", "
@@ -348,20 +385,21 @@ int main()
 
     return 0;
   }
+  
   if (userChoice == "issue-book")
   {
-
-
   }
+
   if (userChoice == "display-borrowed-books")
   {
     cout << "Enter member's ID: " << endl;
     int memberID;
     cin >> memberID;
     member.setMemberID(memberID);
-
+    // Display books borrowed by the member
     librarian.displayBorrowedBooks(member);
   }
+
   if (userChoice == "return-book")
   {
   }
