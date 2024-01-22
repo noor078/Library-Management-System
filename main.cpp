@@ -17,7 +17,8 @@ class Date
 {
   // Constructor for the Date class
 public:
-  Date(int day, int month, int year) : day(day), month(month), year(year) {}
+  Date(int day, int month, int year)
+      : day(day), month(month), year(year) {}
 
   // Overloaded addition operator to calculate a new date by adding days
   Date operator+(int days) const
@@ -40,7 +41,6 @@ private:
   string name;
 
 public:
-  string userChoice;
 
   // Getter for retrieving the name of the person
   string getName() const
@@ -108,15 +108,24 @@ class Member
 {
 private:
   int memberID;
+  string memberName;
+  string memberAddress;
+  string memberEmail;
 
 public:
   vector<Book *> booksBorrowed;
 
-  // Default constructor for Member class
   Member() : memberID(0) {}
 
-  // Constructor for Member class with initialisation
-  Member(int id, const std::string &memberName, const std::string &memberAddress, const std::string &memberEmail) : memberID(id) {}
+  // Constructor for member details
+  Member(int id, const std::string &memberName, const std::string &memberAddress, const std::string &memberEmail)
+      : memberID(id)
+  {
+    Person person;
+    person.setName(memberName);
+    person.setAddress(memberAddress);
+    person.setEmail(memberEmail);
+  }
 
   // Getter method for retrieving the member ID
   int getMemberID() const
@@ -170,7 +179,8 @@ public:
   Book() : bookID(0), pageCount(0), bookName(""), authorFirstName(""), authorLastName(""), bookType("") {}
 
   // Constructor for Book class with initialisation
-  Book(int id, const string &name, const string &firstName, const string &lastName) : bookID(id), bookName(name), authorFirstName(firstName), authorLastName(lastName), borrower(nullptr) {}
+  Book(int id, const string &name, const string &firstName, const string &lastName)
+      : bookID(id), bookName(name), authorFirstName(firstName), authorLastName(lastName), borrower(nullptr) {}
 
   // Getter for retrieving the book ID
   int getbookID() const
@@ -325,7 +335,7 @@ int main()
 {
   // In order to read books from a CSV file, put books into a vector
   vector<Book> libraryBooks = readCSV("library_books.csv");
-  
+
   // Storing members into a vector
   vector<Member> members;
 
@@ -354,6 +364,7 @@ int main()
   // Enables user to independantly input CSV data file name to be used in accessing books
   cout << "Enter the data file name to access all the necessary library books" << endl;
   cin >> filename;
+  cin.ignore();
 
   cout << "What would you like to do?\nType your answer in lowercase and put a dash between words" << endl;
   cout << "Add Member | Issue Book | Return book | Display borrowed books" << endl;
@@ -384,8 +395,8 @@ int main()
     cout << "Email: " << person.getEmail() << "\n";
     cout << "Address: " << person.getAddress() << "\n";
 
-// To set member ID
-int memberID;
+    // To set member ID
+    int memberID;
     std::cout << "Enter member's ID: ";
     std::cin >> memberID;
     member.setMemberID(memberID);
@@ -405,7 +416,6 @@ int memberID;
     cout << "Enter member's ID: " << endl;
     int memberID;
     cin >> memberID;
-    member.setMemberID(memberID);
     // Display books borrowed by the member
     librarian.displayBorrowedBooks(member);
   }
