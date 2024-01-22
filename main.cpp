@@ -41,7 +41,6 @@ private:
   string name;
 
 public:
-
   // Getter for retrieving the name of the person
   string getName() const
   {
@@ -51,13 +50,13 @@ public:
   // Setter for updating the name with validation
   void setName(const string &newName)
   {
-    if (name.length() >= 3 && name.length() <= 20)
+    if (newName.length() >= 3 && newName.length() <= 20)
     {
       name = newName;
     }
     else
     {
-      cout << "Name is not valid, return a name with characters" << endl;
+      cout << "Name is not valid, enter a name with 3 to 20 characters" << endl;
     }
   }
 
@@ -111,6 +110,7 @@ private:
   string memberName;
   string memberAddress;
   string memberEmail;
+  Person person;
 
 public:
   vector<Book *> booksBorrowed;
@@ -121,7 +121,6 @@ public:
   Member(int id, const std::string &memberName, const std::string &memberAddress, const std::string &memberEmail)
       : memberID(id)
   {
-    Person person;
     person.setName(memberName);
     person.setAddress(memberAddress);
     person.setEmail(memberEmail);
@@ -218,17 +217,6 @@ public:
     dueDate = newDueDate;
   }
 
-  // In order to return a borrowed book
-  void returnBook();
-
-  // In order to borrow a book with a specified due date
-  void borrowBook(Person &borrower, const time_t &dueDate);
-
-  // Function for issuing a book to a member with a specified due date
-  void issueBook(Member &member, const time_t &dueDate)
-  {
-    setDueDate(dueDate);
-  }
 };
 
 // Library class
@@ -240,6 +228,12 @@ private:
   std::vector<Member> members;
 
 public:
+  // Default constructor for librarian
+  Librarian() : staffId(0), salary(0) {}
+
+  // Constructor to initialise librarian variables
+  Librarian(int staffId, int salary) : staffId(staffId), salary(salary) {}
+
   // Function to issue a book to a member with a specified due date
   void issueBookToMember(Member &member, Book &book, const time_t &dueDate);
 
@@ -269,21 +263,6 @@ public:
     }
   }
 };
-
-void Librarian::issueBookToMember(Member &member, Book &book, const time_t &dueDate)
-{
-  if (std::find(book.availableBooks.begin(), book.availableBooks.end(), book) != book.availableBooks.end())
-  {
-    book.issueBook(member, dueDate);
-    member.setBooksBorrowed(book);
-
-    std::cout << "Book has been issued successfully.\n";
-  }
-  else
-  {
-    std::cout << "Book not available for issue.\n";
-  }
-}
 
 // Function for reading data source file and returning a vector of books
 vector<Book> readCSV(const string &filename)
@@ -328,8 +307,6 @@ vector<Book> readCSV(const string &filename)
   return books;
 }
 
-vector<Book> readCSV(const string &filename);
-
 // Main function of the Library Management System
 int main()
 {
@@ -365,44 +342,58 @@ int main()
   cout << "Enter the data file name to access all the necessary library books" << endl;
   cin >> filename;
   cin.ignore();
-
+  // Start menu for user choices
   cout << "What would you like to do?\nType your answer in lowercase and put a dash between words" << endl;
   cout << "Add Member | Issue Book | Return book | Display borrowed books" << endl;
-  cin >> userChoice;
+  getline(cin, userChoice);
   cout << "You have selected " << userChoice << endl;
 
   // Adding a member functionality
   // Allows the user to enter member's name, email and address following correct validations
   if (userChoice == "add-member")
   {
+    // Entering member's name with validations
     string newName;
-    cout << "Enter member's name: ";
-    getline(cin, newName);
-    person.setName(newName);
+    do
+    {
+      cout << "Enter member's name (3 to 20 characters): " << endl;
+      getline(cin, newName);
+      person.setName(newName);
+    } while (newName.empty());
 
+    // Entering member's email with validations
     string newEmail;
-    cout << "Enter member's email: ";
-    getline(cin, newEmail);
-    person.setEmail(newEmail);
+    do
+    {
+      cout << "Enter member's email: ";
+      getline(cin, newEmail);
+      person.setEmail(newEmail);
+    } while (newEmail.empty());
 
+    // Entering member's address with validations
     string newAddress;
-    cout << "Enter member's address: ";
-    getline(cin, newAddress);
-    person.setAddress(newAddress);
+    do
+    {
+      cout << "Enter member's address (5 to 50 characters): ";
+      getline(cin, newAddress);
+      person.setAddress(newAddress);
+    } while (newAddress.empty());
 
-    cout << "Member Information:" << endl;
-    cout << "Name: " << person.getName() << "\n";
-    cout << "Email: " << person.getEmail() << "\n";
-    cout << "Address: " << person.getAddress() << "\n";
+    // Information about member stored
+    cout << "You have saved the following details:" << endl;
+    cout << "Member name: " << person.getName() << "\n";
+    cout << "Member email: " << person.getEmail() << "\n";
+    cout << "Member address: " << person.getAddress() << "\n";
 
-    // To set member ID
+    // Setting of member ID
     int memberID;
-    std::cout << "Enter member's ID: ";
-    std::cin >> memberID;
+    cout << "Enter member's ID: ";
+    cin >> memberID;
     member.setMemberID(memberID);
 
+    // Member entered into vector of members
     members.push_back(member);
-    std::cout << "Member added successfully" << std::endl;
+    cout << "Member has been added successfully" << endl;
     return 0;
   }
 
@@ -416,9 +407,20 @@ int main()
     cout << "Enter member's ID: " << endl;
     int memberID;
     cin >> memberID;
-    // Display books borrowed by the member
-    librarian.displayBorrowedBooks(member);
-  }
+
+// Checking if member ID can be found within vector of members
+    auto it = std::find_if(members.begin(), members.end(), [memberID](const Member &member) {
+        return member.getMemberID() == memberID;
+    });
+
+    if (it != members.end())
+    {
+         librarian.displayBorrowedBooks(*it);
+    }
+    else
+    {
+        cout << "Member with ID " << memberID << " not found." << endl;
+    }}
 
   // Faced problems with logic of return book and so decided to omit in order to have code run
   if (userChoice == "return-book")
